@@ -1,40 +1,70 @@
 import React, { useState } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 
-
-function DadosUsuario ({aoEnviar}) {
+function DadosUsuario({ aoEnviar, validacoes }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+
+  const [erros, setErros] = useState({ senha: { valido: true, texto: '' } });
+
+  function validarCampos(event) {
+    const { name, value } = event.target;
+    const novoEstado = { ...erros };
+    novoEstado[name] = validacoes[name](value);
+    setErros(novoEstado);
+  }
+
+  function possoEnviar() {
+    for (let campo in erros) {
+      if (!erros[campo].valido) {
+        return false;
+      }
+    }
+    return true;
+  }
   return (
     <form
-      onSubmit={e => {
-        e.preventDefault();
-        aoEnviar({email, senha});
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (possoEnviar()) {
+          aoEnviar({ email, senha });
+        }
       }}
     >
       <TextField
         value={email}
-        onChange={e => {setEmail(e.target.value)}}
+        onChange={(event) => {
+          setEmail(event.target.value);
+        }}
         id='email'
+        name='email'
         label='email'
         type='email'
+        required
         variant='outlined'
         margin='normal'
-        required
         fullWidth
       />
       <TextField
         value={senha}
-        onChange={e => {setSenha(e.target.value)}}
+        onChange={(event) => {
+          setSenha(event.target.value);
+        }}
+        onBlur={validarCampos}
+        error={!erros.senha.valido}
+        helperText={erros.senha.texto}
         id='senha'
+        name='senha'
         label='senha'
         type='password'
+        required
         variant='outlined'
         margin='normal'
-        required
         fullWidth
       />
-      <Button type='submit' variant='contained' color='primary'>Próximo</Button>
+      <Button type='submit' variant='contained' color='primary'>
+        Próximo
+      </Button>
     </form>
   );
 }

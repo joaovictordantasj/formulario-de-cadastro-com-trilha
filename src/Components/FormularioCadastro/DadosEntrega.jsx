@@ -1,72 +1,83 @@
 import React, { useState } from 'react';
-import { Button, TextField } from '@material-ui/core';
-
-function DadosEntrega ({ aoEnviar }) {
+import { TextField, Button } from '@material-ui/core';
+function DadosEntrega({ aoEnviar }) {
   const [cep, setCep] = useState('');
   const [endereco, setEndereco] = useState('');
   const [numero, setNumero] = useState('');
   const [estado, setEstado] = useState('');
   const [cidade, setCidade] = useState('');
+
   return (
     <form
-      onSubmit={e => {
-        e.preventDefault();
-        aoEnviar({cep, endereco, numero, estado, cidade});
+      onSubmit={(event) => {
+        event.preventDefault();
+        aoEnviar({ cep, endereco, numero, estado, cidade });
       }}
     >
       <TextField
         value={cep}
-        onChange={e => setCep(e.target.value)}
+        onChange={(event) => {
+          setCep(event.target.value);
+        }}
         id='cep'
-        label='cep'
+        name='cep'
+        label='CEP'
         type='number'
         variant='outlined'
         margin='normal'
-        // required
       />
       <TextField
         value={endereco}
-        onChange={e => setEndereco(e.target.value)}
+        onChange={(event) => {
+          setEndereco(event.target.value);
+        }}
         id='endereco'
-        label='endereço'
+        name='endereço'
+        label='Enderço'
         type='text'
         variant='outlined'
         margin='normal'
-        // required
         fullWidth
       />
       <TextField
         value={numero}
-        onChange={e => setNumero(e.target.value)}
+        onChange={(event) => {
+          setNumero(event.target.value);
+        }}
         id='numero'
-        label='número'
+        name='numero'
+        label='Numero'
         type='number'
         variant='outlined'
         margin='normal'
-        // required
       />
       <TextField
         value={estado}
-        onChange={e => setEstado(e.target.value)}
+        onChange={(event) => {
+          setEstado(event.target.value);
+        }}
         id='estado'
-        label='estado'
+        name='estado'
+        label='Estado'
         type='text'
         variant='outlined'
         margin='normal'
-        // required
       />
       <TextField
         value={cidade}
-        onChange={e => setCidade(e.target.value)}
+        onChange={(event) => {
+          setCidade(event.target.value);
+        }}
         id='cidade'
-        label='cidade'
+        name='cidade'
+        label='Cidade'
         type='text'
         variant='outlined'
         margin='normal'
-        // required
       />
-
-      <Button type='submit' variant='contained' color='primary' fullWidth>Finalizar Cadastro</Button>
+      <Button type='submit' variant='contained' color='primary' fullWidth>
+        Finalizar Cadastro
+      </Button>
     </form>
   );
 }

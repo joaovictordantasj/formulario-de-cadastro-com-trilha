@@ -1,64 +1,78 @@
 import React, { useState } from 'react';
-import { Button, TextField, Switch, FormControlLabel } from '@material-ui/core';
+import { TextField, Button, Switch, FormControlLabel } from '@material-ui/core';
 
-function DadosPessoais({aoEnviar, validarCpf}) {
+function DadosPessoais({ aoEnviar, validacoes }) {
   const [nome, setNome] = useState('');
   const [sobrenome, setSobrenome] = useState('');
   const [cpf, setCpf] = useState('');
   const [promocoes, setPromocoes] = useState(true);
-  const [novidades, setNovidades] = useState(true);
-  const [err, setErr] = useState({cpf:{valido:true, texto:''}})
-  return(
-    <form 
-      onSubmit={e => {
-        e.preventDefault();
-        aoEnviar({nome, sobrenome, cpf, promocoes, novidades});
-        // console.log({nome, sobrenome, cpf, promocoes, novidades});
+  const [novidades, setNovidades] = useState(false);
+  const [erros, setErros] = useState({ cpf: { valido: true, texto: '' }, nome: { valido: true, texto: '' } });
+
+  function validarCampos(event) {
+    const { name, value } = event.target;
+    const novoEstado = { ...erros };
+    novoEstado[name] = validacoes[name](value);
+    setErros(novoEstado);
+  }
+  function possoEnviar() {
+    for (let campo in erros) {
+      if (!erros[campo].valido) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (possoEnviar()) {
+          aoEnviar({ nome, sobrenome, cpf, novidades, promocoes });
+        }
       }}
     >
-      <TextField 
+      <TextField
         value={nome}
-        onChange={e => setNome(e.target.value)}
+        onChange={(event) => {
+          setNome(event.target.value);
+        }}
+        onBlur={validarCampos}
+        error={!erros.nome.valido}
+        helperText={erros.nome.texto}
         id='nome'
         label='Nome'
+        name='nome'
         variant='outlined'
         margin='normal'
-        // required
         fullWidth
       />
-
       <TextField
         value={sobrenome}
-        onChange={e => setSobrenome(e.target.value)}
+        onChange={(event) => {
+          setSobrenome(event.target.value);
+        }}
         id='sobrenome'
+        name='sobrenome'
         label='Sobrenome'
         variant='outlined'
         margin='normal'
-        // required
         fullWidth
       />
-      
       <TextField
         value={cpf}
-        onChange={e => {
-          let tmpCpf = e.target.value;
-          if (tmpCpf.length <= 11) {
-            setCpf(tmpCpf);
-          }
+        onChange={(event) => {
+          setCpf(event.target.value);
         }}
-        onBlur={e => {
-          const ehValido = validarCpf(cpf);
-          setErr({cpf:ehValido});
-        }}
-        error={!err.cpf.valido}
-        helperText={err.cpf.texto}
-        id='cpf'
+        onBlur={validarCampos}
+        error={!erros.cpf.valido}
+        helperText={erros.cpf.texto}
+        id='CPF'
+        name='cpf'
         label='CPF'
         variant='outlined'
-        type='number'
         margin='normal'
         fullWidth
-        required
       />
 
       <FormControlLabel
@@ -66,10 +80,11 @@ function DadosPessoais({aoEnviar, validarCpf}) {
         control={
           <Switch
             checked={promocoes}
-            onChange={e => setPromocoes(e.target.checked)}
-            name='promoções'
+            onChange={(event) => {
+              setPromocoes(event.target.checked);
+            }}
+            name='promocoes'
             color='primary'
-            // defaultChecked={promocoes}
           />
         }
       />
@@ -79,17 +94,20 @@ function DadosPessoais({aoEnviar, validarCpf}) {
         control={
           <Switch
             checked={novidades}
-            onChange={e => setNovidades(e.target.checked)}
+            onChange={(event) => {
+              setNovidades(event.target.checked);
+            }}
             name='novidades'
             color='primary'
-            // defaultChecked={novidades}
           />
         }
       />
 
-      <Button type='submit' variant='contained' color='primary'>Próximo</Button>
+      <Button type='submit' variant='contained' color='primary'>
+        Próximo
+      </Button>
     </form>
   );
 }
 
-export default DadosPessoais; 
+export default DadosPessoais;
