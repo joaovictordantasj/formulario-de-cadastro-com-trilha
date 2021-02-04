@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Switch, FormControlLabel, Typography } from '@material-ui/core';
+import { Button, TextField, Switch, FormControlLabel } from '@material-ui/core';
 
 function DadosPessoais({aoEnviar, validarCpf}) {
   const [nome, setNome] = useState('');
@@ -9,14 +9,13 @@ function DadosPessoais({aoEnviar, validarCpf}) {
   const [novidades, setNovidades] = useState(true);
   const [err, setErr] = useState({cpf:{valido:true, texto:''}})
   return(
-  <form 
-    onSubmit={e => {
-      e.preventDefault();
-      aoEnviar({nome, sobrenome, cpf, promocoes, novidades});
-      // console.log({nome, sobrenome, cpf, promocoes, novidades});
-    }}
-  >
-      <Typography variant="h6" component="h6" align="center">Dados Pessoais</Typography>
+    <form 
+      onSubmit={e => {
+        e.preventDefault();
+        aoEnviar({nome, sobrenome, cpf, promocoes, novidades});
+        // console.log({nome, sobrenome, cpf, promocoes, novidades});
+      }}
+    >
       <TextField 
         value={nome}
         onChange={e => setNome(e.target.value)}
@@ -24,7 +23,7 @@ function DadosPessoais({aoEnviar, validarCpf}) {
         label='Nome'
         variant='outlined'
         margin='normal'
-        required
+        // required
         fullWidth
       />
 
@@ -35,7 +34,7 @@ function DadosPessoais({aoEnviar, validarCpf}) {
         label='Sobrenome'
         variant='outlined'
         margin='normal'
-        required
+        // required
         fullWidth
       />
       
